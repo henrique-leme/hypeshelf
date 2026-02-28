@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
 import { ConvexError } from "convex/values";
-import { getAuthenticatedUser, requireRole } from "./helpers/auth";
+import { getAuthenticatedUser, findAuthenticatedUser, requireRole } from "./helpers/auth";
 import {
   genreValidator,
   recommendationArgs,
@@ -38,7 +38,8 @@ export const getPublicRecent = query({
 export const getAll = query({
   args: {},
   handler: async (ctx) => {
-    await getAuthenticatedUser(ctx);
+    const user = await findAuthenticatedUser(ctx);
+    if (!user) return null;
 
     const recommendations = await ctx.db
       .query("recommendations")
@@ -54,7 +55,8 @@ export const getAll = query({
 export const getByGenre = query({
   args: { genre: genreValidator },
   handler: async (ctx, { genre }) => {
-    await getAuthenticatedUser(ctx);
+    const user = await findAuthenticatedUser(ctx);
+    if (!user) return null;
 
     const recommendations = await ctx.db
       .query("recommendations")

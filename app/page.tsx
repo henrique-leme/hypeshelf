@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useQuery } from "convex/react";
+import { useAuth, SignInButton } from "@clerk/nextjs";
 import { api } from "../convex/_generated/api";
 import { APP_NAME, APP_TAGLINE } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,7 @@ import { RecommendationCard } from "@/components/recommendations/recommendation-
 import { RecommendationGridSkeleton } from "@/components/recommendations/recommendation-skeleton";
 
 export default function Home() {
+  const { isSignedIn } = useAuth();
   const recommendations = useQuery(api.recommendations.getPublicRecent);
 
   return (
@@ -20,11 +22,19 @@ export default function Home() {
         <p className="max-w-md text-base text-muted-foreground sm:text-lg">
           {APP_TAGLINE}
         </p>
-        <Link href="/sign-in">
-          <Button size="lg" className="mt-2 sm:mt-4">
-            Sign in to add yours
-          </Button>
-        </Link>
+        {isSignedIn ? (
+          <Link href="/dashboard">
+            <Button size="lg" className="mt-2 sm:mt-4">
+              Add yours
+            </Button>
+          </Link>
+        ) : (
+          <SignInButton mode="modal">
+            <Button size="lg" className="mt-2 sm:mt-4">
+              Sign in to add yours
+            </Button>
+          </SignInButton>
+        )}
       </section>
 
       <section className="space-y-6">
@@ -41,9 +51,15 @@ export default function Home() {
             <p className="text-muted-foreground">
               No recommendations yet. Be the first!
             </p>
-            <Link href="/sign-in">
-              <Button variant="outline">Sign in to get started</Button>
-            </Link>
+            {isSignedIn ? (
+              <Link href="/dashboard">
+                <Button variant="outline">Get started</Button>
+              </Link>
+            ) : (
+              <SignInButton mode="modal">
+                <Button variant="outline">Sign in to get started</Button>
+              </SignInButton>
+            )}
           </div>
         )}
 

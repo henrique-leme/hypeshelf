@@ -19,7 +19,7 @@ interface RecommendationWithAuthor {
 }
 
 interface RecommendationListProps {
-  recommendations: RecommendationWithAuthor[] | undefined;
+  recommendations: RecommendationWithAuthor[] | null | undefined;
   currentUserId: Id<"users"> | undefined;
   currentUserRole: string;
 }
@@ -29,7 +29,7 @@ export function RecommendationList({
   currentUserId,
   currentUserRole,
 }: RecommendationListProps) {
-  if (recommendations === undefined) {
+  if (recommendations === undefined || recommendations === null) {
     return <RecommendationGridSkeleton />;
   }
 
