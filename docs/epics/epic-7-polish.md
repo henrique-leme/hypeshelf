@@ -8,7 +8,7 @@ Elevate the application from functional to production-quality. Every interaction
 feel smooth: loading states prevent layout shifts, errors are handled gracefully,
 and the interface works across all devices and input methods.
 
-## Status: Not Started
+## Status: Completed
 
 ## Dependencies: EPIC 6
 
@@ -18,7 +18,7 @@ and the interface works across all devices and input methods.
 
 ### Task 7.1 — Add loading states and error boundaries
 
-**Status:** [ ] Not Started
+**Status:** [x] Completed
 
 **Description:**
 Add skeleton loaders for all data-dependent sections, error boundaries for graceful
@@ -59,7 +59,7 @@ failure recovery, and toast notifications for user feedback on CRUD operations.
 
 ### Task 7.2 — Responsive design and accessibility pass
 
-**Status:** [ ] Not Started
+**Status:** [x] Completed
 
 **Description:**
 Final pass over all pages and components to ensure mobile responsiveness and
