@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
-import { ExternalLink, Star } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { StaffPickBadge } from "./staff-pick-badge";
 
 interface RecommendationCardProps {
   title: string;
@@ -35,16 +36,13 @@ export function RecommendationCard({
   actions,
 }: RecommendationCardProps) {
   return (
-    <Card className="flex h-full flex-col">
+    <Card
+      className={`flex h-full flex-col ${isStaffPick ? "border-amber-500/50 shadow-amber-500/10 shadow-md" : ""}`}
+    >
       <CardHeader>
         <div className="flex items-start gap-2">
           <CardTitle className="line-clamp-2 text-lg">{title}</CardTitle>
-          {isStaffPick && (
-            <Badge className="shrink-0 bg-amber-500 text-white hover:bg-amber-600">
-              <Star className="size-3" />
-              Staff Pick
-            </Badge>
-          )}
+          {isStaffPick && <StaffPickBadge />}
         </div>
         <Badge variant="secondary" className="w-fit capitalize">
           {genre}

@@ -3,6 +3,7 @@
 import { Id } from "../../convex/_generated/dataModel";
 import { RecommendationCard } from "./recommendation-card";
 import { DeleteConfirmation } from "./delete-confirmation";
+import { StaffPickToggle } from "./staff-pick-toggle";
 
 interface RecommendationWithAuthor {
   _id: Id<"recommendations">;
@@ -66,7 +67,15 @@ export function RecommendationList({
             isStaffPick={rec.isStaffPick}
             actions={
               canDelete ? (
-                <DeleteConfirmation recommendationId={rec._id} />
+                <div className="flex items-center gap-1">
+                  {isAdmin && (
+                    <StaffPickToggle
+                      recommendationId={rec._id}
+                      isStaffPick={rec.isStaffPick}
+                    />
+                  )}
+                  <DeleteConfirmation recommendationId={rec._id} />
+                </div>
               ) : undefined
             }
           />

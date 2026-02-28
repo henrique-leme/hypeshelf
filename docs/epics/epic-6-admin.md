@@ -9,7 +9,7 @@ Staff Pick. Admin actions are visually distinct but use the same components (ADR
 All admin operations are enforced server-side in Convex mutations — the UI only
 controls visibility, never authorization.
 
-## Status: Not Started
+## Status: Completed
 
 ## Dependencies: EPIC 5
 
@@ -19,7 +19,7 @@ controls visibility, never authorization.
 
 ### Task 6.1 — Implement admin actions in dashboard
 
-**Status:** [ ] Not Started
+**Status:** [x] Completed
 
 **Description:**
 Add admin-specific UI elements to the existing recommendation cards and implement
