@@ -1,6 +1,6 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
-import { roleValidator } from "./helpers/validators";
+import { roleValidator, genreValidator } from "./helpers/validators";
 
 export default defineSchema({
   users: defineTable({
@@ -12,7 +12,7 @@ export default defineSchema({
 
   recommendations: defineTable({
     title: v.string(),
-    genre: v.string(),
+    genre: genreValidator,
     link: v.string(),
     blurb: v.string(),
     userId: v.id("users"),

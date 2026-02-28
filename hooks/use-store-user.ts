@@ -14,7 +14,8 @@ export function useStoreUser() {
     if (!isAuthenticated || hasStored.current) return;
 
     hasStored.current = true;
-    storeUser().catch(() => {
+    storeUser().catch((error) => {
+      console.error("Failed to sync user to Convex:", error);
       hasStored.current = false;
     });
   }, [isAuthenticated, storeUser]);

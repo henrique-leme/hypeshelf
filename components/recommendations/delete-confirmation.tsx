@@ -28,15 +28,19 @@ export function DeleteConfirmation({
   recommendationId,
 }: DeleteConfirmationProps) {
   const [open, setOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const removeRecommendation = useMutation(api.recommendations.remove);
 
   async function handleDelete() {
+    setIsDeleting(true);
     try {
       await removeRecommendation({ recommendationId });
       toast.success("Recommendation deleted.");
       setOpen(false);
     } catch (error) {
       toast.error(getErrorMessage(error));
+    } finally {
+      setIsDeleting(false);
     }
   }
 
@@ -57,7 +61,9 @@ export function DeleteConfirmation({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+          <AlertDialogAction onClick={handleDelete} disabled={isDeleting}>
+            {isDeleting ? "Deleting..." : "Delete"}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

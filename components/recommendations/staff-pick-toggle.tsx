@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useMutation } from "convex/react";
 import { toast } from "sonner";
 import { Star } from "lucide-react";
@@ -17,9 +18,11 @@ export function StaffPickToggle({
   recommendationId,
   isStaffPick,
 }: StaffPickToggleProps) {
+  const [isToggling, setIsToggling] = useState(false);
   const toggleStaffPick = useMutation(api.recommendations.toggleStaffPick);
 
   async function handleToggle() {
+    setIsToggling(true);
     try {
       await toggleStaffPick({ recommendationId });
       toast.success(
@@ -27,6 +30,8 @@ export function StaffPickToggle({
       );
     } catch (error) {
       toast.error(getErrorMessage(error));
+    } finally {
+      setIsToggling(false);
     }
   }
 
@@ -36,6 +41,7 @@ export function StaffPickToggle({
       size="icon"
       className="size-8"
       onClick={handleToggle}
+      disabled={isToggling}
       aria-label={isStaffPick ? "Remove Staff Pick" : "Mark as Staff Pick"}
     >
       <Star
