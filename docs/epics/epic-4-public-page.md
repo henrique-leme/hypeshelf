@@ -9,7 +9,7 @@ Create the first visual impression of HypeShelf. The landing page must work with
 authentication, showcase recent recommendations, and funnel users to sign in.
 Components built here (header, recommendation-card) are reused in the dashboard (ADR-006).
 
-## Status: Not Started
+## Status: Completed
 
 ## Dependencies: EPIC 3
 
@@ -19,7 +19,7 @@ Components built here (header, recommendation-card) are reused in the dashboard 
 
 ### Task 4.1 — Create header, footer, and layout components
 
-**Status:** [ ] Not Started
+**Status:** [x] Completed
 
 **Description:**
 Build the global layout shell components. The header is auth-aware: it shows sign-in/sign-up
@@ -63,7 +63,7 @@ These components wrap every page in the application.
 
 ### Task 4.2 — Build public landing page
 
-**Status:** [ ] Not Started
+**Status:** [x] Completed
 
 **Description:**
 Build the home page that anonymous users see. It features a hero section with branding,
