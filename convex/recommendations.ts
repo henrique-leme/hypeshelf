@@ -1,5 +1,7 @@
 import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
+import { QueryCtx } from "./_generated/server";
+import { Doc } from "./_generated/dataModel";
 import { ConvexError } from "convex/values";
 import { getAuthenticatedUser, findAuthenticatedUser, requireRole } from "./helpers/auth";
 import {
@@ -8,12 +10,13 @@ import {
   FIELD_LIMITS,
 } from "./helpers/validators";
 import { isSafeUrl } from "../lib/url";
+import { RecommendationWithAuthor } from "../types/recommendations";
 
 async function enrichWithAuthor(
-  ctx: { db: { get: (id: any) => Promise<any> } },
-  recommendation: any
-) {
-  const author = await ctx.db.get(recommendation.userId);
+  context: QueryCtx,
+  recommendation: Doc<"recommendations">
+): Promise<RecommendationWithAuthor> {
+  const author = await context.db.get(recommendation.userId);
   return {
     ...recommendation,
     authorName: author?.name ?? "Unknown",
@@ -23,57 +26,57 @@ async function enrichWithAuthor(
 
 export const getPublicRecent = query({
   args: {},
-  handler: async (ctx) => {
-    const recommendations = await ctx.db
+  handler: async (context) => {
+    const recommendations = await context.db
       .query("recommendations")
       .order("desc")
       .take(10);
 
     return Promise.all(
-      recommendations.map((rec) => enrichWithAuthor(ctx, rec))
+      recommendations.map((recommendation) => enrichWithAuthor(context, recommendation))
     );
   },
 });
 
 export const getAll = query({
   args: {},
-  handler: async (ctx) => {
-    const user = await findAuthenticatedUser(ctx);
+  handler: async (context) => {
+    const user = await findAuthenticatedUser(context);
     if (!user) return null;
 
-    const recommendations = await ctx.db
+    const recommendations = await context.db
       .query("recommendations")
       .order("desc")
       .collect();
 
     return Promise.all(
-      recommendations.map((rec) => enrichWithAuthor(ctx, rec))
+      recommendations.map((recommendation) => enrichWithAuthor(context, recommendation))
     );
   },
 });
 
 export const getByGenre = query({
   args: { genre: genreValidator },
-  handler: async (ctx, { genre }) => {
-    const user = await findAuthenticatedUser(ctx);
+  handler: async (context, { genre }) => {
+    const user = await findAuthenticatedUser(context);
     if (!user) return null;
 
-    const recommendations = await ctx.db
+    const recommendations = await context.db
       .query("recommendations")
       .withIndex("by_genre", (q) => q.eq("genre", genre))
       .order("desc")
       .collect();
 
     return Promise.all(
-      recommendations.map((rec) => enrichWithAuthor(ctx, rec))
+      recommendations.map((recommendation) => enrichWithAuthor(context, recommendation))
     );
   },
 });
 
 export const create = mutation({
   args: recommendationArgs,
-  handler: async (ctx, args) => {
-    const user = await getAuthenticatedUser(ctx);
+  handler: async (context, args) => {
+    const user = await getAuthenticatedUser(context);
 
     if (args.title.length > FIELD_LIMITS.TITLE_MAX) {
       throw new ConvexError("TITLE_TOO_LONG");
@@ -88,7 +91,7 @@ export const create = mutation({
       throw new ConvexError("INVALID_URL");
     }
 
-    return await ctx.db.insert("recommendations", {
+    return await context.db.insert("recommendations", {
       title: args.title,
       genre: args.genre,
       link: args.link,
@@ -101,10 +104,10 @@ export const create = mutation({
 
 export const remove = mutation({
   args: { recommendationId: v.id("recommendations") },
-  handler: async (ctx, { recommendationId }) => {
-    const user = await getAuthenticatedUser(ctx);
+  handler: async (context, { recommendationId }) => {
+    const user = await getAuthenticatedUser(context);
 
-    const recommendation = await ctx.db.get(recommendationId);
+    const recommendation = await context.db.get(recommendationId);
     if (!recommendation) {
       throw new ConvexError("NOT_FOUND");
     }
@@ -116,22 +119,22 @@ export const remove = mutation({
       throw new ConvexError("FORBIDDEN");
     }
 
-    await ctx.db.delete(recommendationId);
+    await context.db.delete(recommendationId);
   },
 });
 
 export const toggleStaffPick = mutation({
   args: { recommendationId: v.id("recommendations") },
-  handler: async (ctx, { recommendationId }) => {
-    const user = await getAuthenticatedUser(ctx);
+  handler: async (context, { recommendationId }) => {
+    const user = await getAuthenticatedUser(context);
     requireRole(user, "admin");
 
-    const recommendation = await ctx.db.get(recommendationId);
+    const recommendation = await context.db.get(recommendationId);
     if (!recommendation) {
       throw new ConvexError("NOT_FOUND");
     }
 
-    await ctx.db.patch(recommendationId, {
+    await context.db.patch(recommendationId, {
       isStaffPick: !recommendation.isStaffPick,
     });
   },

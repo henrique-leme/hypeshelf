@@ -5,24 +5,25 @@ import {
   internalQuery,
   internalMutation,
 } from "./_generated/server";
+import { Doc } from "./_generated/dataModel";
 import { ConvexError } from "convex/values";
 import { roleValidator } from "./helpers/validators";
 
 export const store = mutation({
   args: {},
-  handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity();
+  handler: async (context) => {
+    const identity = await context.auth.getUserIdentity();
     if (!identity) {
       throw new ConvexError("UNAUTHENTICATED");
     }
 
-    const existing = await ctx.db
+    const existing = await context.db
       .query("users")
       .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
       .unique();
 
     if (existing) {
-      const updates: Record<string, string> = {};
+      const updates: Partial<Pick<Doc<"users">, "name" | "imageUrl">> = {};
       if (identity.name && identity.name !== existing.name) {
         updates.name = identity.name;
       }
@@ -30,12 +31,12 @@ export const store = mutation({
         updates.imageUrl = identity.pictureUrl;
       }
       if (Object.keys(updates).length > 0) {
-        await ctx.db.patch(existing._id, updates);
+        await context.db.patch(existing._id, updates);
       }
       return existing._id;
     }
 
-    return await ctx.db.insert("users", {
+    return await context.db.insert("users", {
       clerkId: identity.subject,
       name: identity.name ?? "Anonymous",
       imageUrl: identity.pictureUrl,
@@ -46,13 +47,13 @@ export const store = mutation({
 
 export const getCurrentUser = query({
   args: {},
-  handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity();
+  handler: async (context) => {
+    const identity = await context.auth.getUserIdentity();
     if (!identity) {
       return null;
     }
 
-    return await ctx.db
+    return await context.db
       .query("users")
       .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
       .unique();
@@ -61,8 +62,8 @@ export const getCurrentUser = query({
 
 export const getByClerkId = internalQuery({
   args: { clerkId: v.string() },
-  handler: async (ctx, { clerkId }) => {
-    return await ctx.db
+  handler: async (context, { clerkId }) => {
+    return await context.db
       .query("users")
       .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
       .unique();
@@ -76,8 +77,8 @@ export const createFromWebhook = internalMutation({
     imageUrl: v.optional(v.string()),
     role: roleValidator,
   },
-  handler: async (ctx, args) => {
-    return await ctx.db.insert("users", {
+  handler: async (context, args) => {
+    return await context.db.insert("users", {
       clerkId: args.clerkId,
       name: args.name,
       imageUrl: args.imageUrl,
@@ -93,14 +94,14 @@ export const updateFromWebhook = internalMutation({
     imageUrl: v.optional(v.string()),
     role: roleValidator,
   },
-  handler: async (ctx, { id, ...updates }) => {
-    await ctx.db.patch(id, updates);
+  handler: async (context, { id, ...updates }) => {
+    await context.db.patch(id, updates);
   },
 });
 
 export const deleteFromWebhook = internalMutation({
   args: { id: v.id("users") },
-  handler: async (ctx, { id }) => {
-    await ctx.db.delete(id);
+  handler: async (context, { id }) => {
+    await context.db.delete(id);
   },
 });

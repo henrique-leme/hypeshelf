@@ -1,27 +1,17 @@
 "use client";
 
 import { Id } from "../../convex/_generated/dataModel";
+import { RecommendationWithAuthor } from "@/types/recommendations";
+import { Role } from "@/types/globals";
 import { RecommendationCard } from "./recommendation-card";
 import { DeleteConfirmation } from "./delete-confirmation";
 import { StaffPickToggle } from "./staff-pick-toggle";
 import { RecommendationGridSkeleton } from "./recommendation-skeleton";
 
-interface RecommendationWithAuthor {
-  _id: Id<"recommendations">;
-  title: string;
-  genre: string;
-  blurb: string;
-  link: string;
-  isStaffPick: boolean;
-  userId: Id<"users">;
-  authorName: string;
-  authorImageUrl?: string;
-}
-
 interface RecommendationListProps {
   recommendations: RecommendationWithAuthor[] | null | undefined;
   currentUserId: Id<"users"> | undefined;
-  currentUserRole: string;
+  currentUserRole: Role;
 }
 
 export function RecommendationList({

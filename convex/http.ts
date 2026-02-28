@@ -2,13 +2,14 @@ import { httpRouter } from "convex/server";
 import { httpAction } from "./_generated/server";
 import { internal } from "./_generated/api";
 import { Webhook } from "svix";
+import { ClerkWebhookEvent } from "../types/clerk";
 
 const http = httpRouter();
 
 http.route({
   path: "/clerk-users-webhook",
   method: "POST",
-  handler: httpAction(async (ctx, request) => {
+  handler: httpAction(async (context, request) => {
     const webhookSecret = process.env.CLERK_WEBHOOK_SECRET;
     if (!webhookSecret) {
       return new Response("Webhook secret not configured", { status: 500 });
@@ -25,13 +26,13 @@ http.route({
     const body = await request.text();
 
     const wh = new Webhook(webhookSecret);
-    let event: WebhookEvent;
+    let event: ClerkWebhookEvent;
     try {
       event = wh.verify(body, {
         "svix-id": svixId,
         "svix-timestamp": svixTimestamp,
         "svix-signature": svixSignature,
-      }) as WebhookEvent;
+      }) as ClerkWebhookEvent;
     } catch {
       return new Response("Invalid webhook signature", { status: 400 });
     }
@@ -44,21 +45,21 @@ http.route({
         const name =
           [first_name, last_name].filter(Boolean).join(" ") || "Anonymous";
         const role =
-          (public_metadata?.role as string) === "admin" ? "admin" : "user";
+          public_metadata?.role === "admin" ? "admin" : "user";
 
-        const existing = await ctx.runQuery(internal.users.getByClerkId, {
+        const existing = await context.runQuery(internal.users.getByClerkId, {
           clerkId: id,
         });
 
         if (existing) {
-          await ctx.runMutation(internal.users.updateFromWebhook, {
+          await context.runMutation(internal.users.updateFromWebhook, {
             id: existing._id,
             name,
             imageUrl: image_url,
             role,
           });
         } else {
-          await ctx.runMutation(internal.users.createFromWebhook, {
+          await context.runMutation(internal.users.createFromWebhook, {
             clerkId: id,
             name,
             imageUrl: image_url,
@@ -70,11 +71,11 @@ http.route({
       case "user.deleted": {
         const { id } = event.data;
         if (id) {
-          const existing = await ctx.runQuery(internal.users.getByClerkId, {
+          const existing = await context.runQuery(internal.users.getByClerkId, {
             clerkId: id,
           });
           if (existing) {
-            await ctx.runMutation(internal.users.deleteFromWebhook, {
+            await context.runMutation(internal.users.deleteFromWebhook, {
               id: existing._id,
             });
           }
@@ -86,16 +87,5 @@ http.route({
     return new Response("OK", { status: 200 });
   }),
 });
-
-interface WebhookEvent {
-  type: string;
-  data: {
-    id: string;
-    first_name?: string;
-    last_name?: string;
-    image_url?: string;
-    public_metadata?: Record<string, unknown>;
-  };
-}
 
 export default http;

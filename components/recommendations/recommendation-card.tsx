@@ -13,17 +13,14 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { StaffPickBadge } from "./staff-pick-badge";
+import { RecommendationWithAuthor } from "@/types/recommendations";
 
-interface RecommendationCardProps {
-  title: string;
-  genre: string;
-  blurb: string;
-  link: string;
-  authorName: string;
-  authorImageUrl?: string;
-  isStaffPick: boolean;
+type RecommendationCardProps = Pick<
+  RecommendationWithAuthor,
+  "title" | "genre" | "blurb" | "link" | "authorName" | "authorImageUrl" | "isStaffPick"
+> & {
   actions?: ReactNode;
-}
+};
 
 export function RecommendationCard({
   title,
