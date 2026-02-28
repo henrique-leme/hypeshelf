@@ -6,16 +6,14 @@ import {
   internalMutation,
 } from "./_generated/server";
 import { Doc } from "./_generated/dataModel";
-import { ConvexError } from "convex/values";
+import { throwError } from "./errors";
 import { roleValidator } from "./helpers/validators";
 
 export const store = mutation({
   args: {},
   handler: async (context) => {
     const identity = await context.auth.getUserIdentity();
-    if (!identity) {
-      throw new ConvexError("UNAUTHENTICATED");
-    }
+    if (!identity) throwError("UNAUTHENTICATED");
 
     const existing = await context.db
       .query("users")

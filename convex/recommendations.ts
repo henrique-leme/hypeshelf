@@ -2,8 +2,8 @@ import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
 import { QueryCtx } from "./_generated/server";
 import { Doc } from "./_generated/dataModel";
-import { ConvexError } from "convex/values";
 import { getAuthenticatedUser, findAuthenticatedUser, requireRole } from "./helpers/auth";
+import { throwError } from "./errors";
 import {
   genreValidator,
   recommendationArgs,
@@ -78,18 +78,10 @@ export const create = mutation({
   handler: async (context, args) => {
     const user = await getAuthenticatedUser(context);
 
-    if (args.title.length > FIELD_LIMITS.TITLE_MAX) {
-      throw new ConvexError("TITLE_TOO_LONG");
-    }
-    if (args.blurb.length > FIELD_LIMITS.BLURB_MAX) {
-      throw new ConvexError("BLURB_TOO_LONG");
-    }
-    if (args.link.length > FIELD_LIMITS.LINK_MAX) {
-      throw new ConvexError("LINK_TOO_LONG");
-    }
-    if (!isSafeUrl(args.link)) {
-      throw new ConvexError("INVALID_URL");
-    }
+    if (args.title.length > FIELD_LIMITS.TITLE_MAX) throwError("TITLE_TOO_LONG");
+    if (args.blurb.length > FIELD_LIMITS.BLURB_MAX) throwError("BLURB_TOO_LONG");
+    if (args.link.length > FIELD_LIMITS.LINK_MAX) throwError("LINK_TOO_LONG");
+    if (!isSafeUrl(args.link)) throwError("INVALID_URL");
 
     return await context.db.insert("recommendations", {
       title: args.title,
@@ -108,16 +100,12 @@ export const remove = mutation({
     const user = await getAuthenticatedUser(context);
 
     const recommendation = await context.db.get(recommendationId);
-    if (!recommendation) {
-      throw new ConvexError("NOT_FOUND");
-    }
+    if (!recommendation) throwError("NOT_FOUND");
 
     const isOwner = recommendation.userId === user._id;
     const isAdmin = user.role === "admin";
 
-    if (!isOwner && !isAdmin) {
-      throw new ConvexError("FORBIDDEN");
-    }
+    if (!isOwner && !isAdmin) throwError("FORBIDDEN");
 
     await context.db.delete(recommendationId);
   },
@@ -130,9 +118,7 @@ export const toggleStaffPick = mutation({
     requireRole(user, "admin");
 
     const recommendation = await context.db.get(recommendationId);
-    if (!recommendation) {
-      throw new ConvexError("NOT_FOUND");
-    }
+    if (!recommendation) throwError("NOT_FOUND");
 
     await context.db.patch(recommendationId, {
       isStaffPick: !recommendation.isStaffPick,

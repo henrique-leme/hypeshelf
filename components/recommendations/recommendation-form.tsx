@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "convex/react";
 import { toast } from "sonner";
 import { Plus } from "lucide-react";
+import { getErrorMessage } from "@/lib/convex-errors";
 import { api } from "../../convex/_generated/api";
 import {
   recommendationFormSchema,
@@ -58,8 +59,8 @@ export function RecommendationForm() {
       toast.success("Recommendation added!");
       form.reset();
       setOpen(false);
-    } catch {
-      toast.error("Failed to add recommendation. Please try again.");
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     }
   }
 

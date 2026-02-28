@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useMutation } from "convex/react";
 import { toast } from "sonner";
 import { Trash2 } from "lucide-react";
+import { getErrorMessage } from "@/lib/convex-errors";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
@@ -34,8 +35,8 @@ export function DeleteConfirmation({
       await removeRecommendation({ recommendationId });
       toast.success("Recommendation deleted.");
       setOpen(false);
-    } catch {
-      toast.error("Failed to delete recommendation.");
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     }
   }
 

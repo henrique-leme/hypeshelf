@@ -9,7 +9,7 @@ import { RecommendationForm } from "@/components/recommendations/recommendation-
 import { RecommendationList } from "@/components/recommendations/recommendation-list";
 
 export default function DashboardPage() {
-  const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
+  const [selectedGenre, setSelectedGenre] = useState<Genre | null>(null);
   const currentUser = useQuery(api.users.getCurrentUser);
 
   const allRecommendations = useQuery(
@@ -19,7 +19,7 @@ export default function DashboardPage() {
 
   const filteredRecommendations = useQuery(
     api.recommendations.getByGenre,
-    selectedGenre ? { genre: selectedGenre as Genre } : "skip"
+    selectedGenre ? { genre: selectedGenre } : "skip"
   );
 
   const recommendations = selectedGenre

@@ -1,11 +1,11 @@
 "use client";
 
-import { GENRES } from "@/lib/constants";
+import { GENRES, Genre } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 
 interface GenreFilterProps {
-  selectedGenre: string | null;
-  onGenreChange: (genre: string | null) => void;
+  selectedGenre: Genre | null;
+  onGenreChange: (genre: Genre | null) => void;
 }
 
 export function GenreFilter({ selectedGenre, onGenreChange }: GenreFilterProps) {

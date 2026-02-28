@@ -3,6 +3,7 @@
 import { Id } from "../../convex/_generated/dataModel";
 import { RecommendationWithAuthor } from "@/types/recommendations";
 import { Role } from "@/types/globals";
+import { canDeleteRecommendation } from "@/lib/authorization";
 import { RecommendationCard } from "./recommendation-card";
 import { DeleteConfirmation } from "./delete-confirmation";
 import { StaffPickToggle } from "./staff-pick-toggle";
@@ -36,9 +37,8 @@ export function RecommendationList({
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {recommendations.map((rec) => {
-        const isOwner = currentUserId === rec.userId;
         const isAdmin = currentUserRole === "admin";
-        const canDelete = isOwner || isAdmin;
+        const showActions = canDeleteRecommendation(currentUserId, rec.userId, currentUserRole);
 
         return (
           <RecommendationCard
@@ -51,7 +51,7 @@ export function RecommendationList({
             authorImageUrl={rec.authorImageUrl}
             isStaffPick={rec.isStaffPick}
             actions={
-              canDelete ? (
+              showActions ? (
                 <div className="flex items-center gap-1">
                   {isAdmin && (
                     <StaffPickToggle
