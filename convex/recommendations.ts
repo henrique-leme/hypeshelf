@@ -78,7 +78,9 @@ export const create = mutation({
   handler: async (context, args) => {
     const user = await getAuthenticatedUser(context);
 
+    if (args.title.trim().length === 0) throwError("TITLE_REQUIRED");
     if (args.title.length > FIELD_LIMITS.TITLE_MAX) throwError("TITLE_TOO_LONG");
+    if (args.blurb.trim().length === 0) throwError("BLURB_REQUIRED");
     if (args.blurb.length > FIELD_LIMITS.BLURB_MAX) throwError("BLURB_TOO_LONG");
     if (args.link.length > FIELD_LIMITS.LINK_MAX) throwError("LINK_TOO_LONG");
     if (!isSafeUrl(args.link)) throwError("INVALID_URL");
