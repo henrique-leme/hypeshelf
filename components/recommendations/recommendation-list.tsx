@@ -8,19 +8,30 @@ import { RecommendationCard } from "./recommendation-card";
 import { DeleteConfirmation } from "./delete-confirmation";
 import { StaffPickToggle } from "./staff-pick-toggle";
 import { RecommendationGridSkeleton } from "./recommendation-skeleton";
+import { Button } from "@/components/ui/button";
+
+type PaginationStatus =
+  | "LoadingFirstPage"
+  | "LoadingMore"
+  | "CanLoadMore"
+  | "Exhausted";
 
 interface RecommendationListProps {
-  recommendations: RecommendationWithAuthor[] | null | undefined;
+  recommendations: RecommendationWithAuthor[];
   currentUserId: Id<"users"> | undefined;
   currentUserRole: Role;
+  status: PaginationStatus;
+  onLoadMore: () => void;
 }
 
 export function RecommendationList({
   recommendations,
   currentUserId,
   currentUserRole,
+  status,
+  onLoadMore,
 }: RecommendationListProps) {
-  if (recommendations === undefined || recommendations === null) {
+  if (status === "LoadingFirstPage") {
     return <RecommendationGridSkeleton />;
   }
 
@@ -35,37 +46,55 @@ export function RecommendationList({
   }
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {recommendations.map((rec) => {
-        const isAdmin = currentUserRole === "admin";
-        const showActions = canDeleteRecommendation(currentUserId, rec.userId, currentUserRole);
+    <div className="space-y-6">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {recommendations.map((rec) => {
+          const isAdmin = currentUserRole === "admin";
+          const showActions = canDeleteRecommendation(currentUserId, rec.userId, currentUserRole);
 
-        return (
-          <RecommendationCard
-            key={rec._id}
-            title={rec.title}
-            genre={rec.genre}
-            blurb={rec.blurb}
-            link={rec.link}
-            authorName={rec.authorName}
-            authorImageUrl={rec.authorImageUrl}
-            isStaffPick={rec.isStaffPick}
-            actions={
-              showActions ? (
-                <div className="flex items-center gap-1">
-                  {isAdmin && (
-                    <StaffPickToggle
-                      recommendationId={rec._id}
-                      isStaffPick={rec.isStaffPick}
-                    />
-                  )}
-                  <DeleteConfirmation recommendationId={rec._id} />
-                </div>
-              ) : undefined
-            }
-          />
-        );
-      })}
+          return (
+            <RecommendationCard
+              key={rec._id}
+              title={rec.title}
+              genre={rec.genre}
+              blurb={rec.blurb}
+              link={rec.link}
+              authorName={rec.authorName}
+              authorImageUrl={rec.authorImageUrl}
+              isStaffPick={rec.isStaffPick}
+              actions={
+                showActions ? (
+                  <div className="flex items-center gap-1">
+                    {isAdmin && (
+                      <StaffPickToggle
+                        recommendationId={rec._id}
+                        isStaffPick={rec.isStaffPick}
+                      />
+                    )}
+                    <DeleteConfirmation recommendationId={rec._id} />
+                  </div>
+                ) : undefined
+              }
+            />
+          );
+        })}
+      </div>
+
+      {status === "CanLoadMore" && (
+        <div className="flex justify-center">
+          <Button variant="outline" onClick={onLoadMore}>
+            Load more
+          </Button>
+        </div>
+      )}
+
+      {status === "LoadingMore" && (
+        <div className="flex justify-center">
+          <Button variant="outline" disabled>
+            Loading...
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

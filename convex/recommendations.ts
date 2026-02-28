@@ -1,4 +1,5 @@
 import { v } from "convex/values";
+import { paginationOptsValidator } from "convex/server";
 import { query, mutation } from "./_generated/server";
 import { QueryCtx } from "./_generated/server";
 import { Doc } from "./_generated/dataModel";
@@ -39,37 +40,41 @@ export const getPublicRecent = query({
 });
 
 export const getAll = query({
-  args: {},
-  handler: async (context) => {
+  args: { paginationOpts: paginationOptsValidator },
+  handler: async (context, { paginationOpts }) => {
     const user = await findAuthenticatedUser(context);
-    if (!user) return null;
+    if (!user) return { page: [], isDone: true, continueCursor: "" };
 
-    const recommendations = await context.db
+    const result = await context.db
       .query("recommendations")
       .order("desc")
-      .collect();
+      .paginate(paginationOpts);
 
-    return Promise.all(
-      recommendations.map((recommendation) => enrichWithAuthor(context, recommendation))
+    const page = await Promise.all(
+      result.page.map((recommendation) => enrichWithAuthor(context, recommendation))
     );
+
+    return { ...result, page };
   },
 });
 
 export const getByGenre = query({
-  args: { genre: genreValidator },
-  handler: async (context, { genre }) => {
+  args: { genre: genreValidator, paginationOpts: paginationOptsValidator },
+  handler: async (context, { genre, paginationOpts }) => {
     const user = await findAuthenticatedUser(context);
-    if (!user) return null;
+    if (!user) return { page: [], isDone: true, continueCursor: "" };
 
-    const recommendations = await context.db
+    const result = await context.db
       .query("recommendations")
       .withIndex("by_genre", (q) => q.eq("genre", genre))
       .order("desc")
-      .collect();
+      .paginate(paginationOpts);
 
-    return Promise.all(
-      recommendations.map((recommendation) => enrichWithAuthor(context, recommendation))
+    const page = await Promise.all(
+      result.page.map((recommendation) => enrichWithAuthor(context, recommendation))
     );
+
+    return { ...result, page };
   },
 });
 
