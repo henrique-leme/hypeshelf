@@ -9,7 +9,7 @@ Build the core authenticated experience. Users can browse all recommendations,
 filter by genre, add new ones via a validated form, and manage (delete) their own.
 This epic does NOT include admin features — those are in EPIC 6.
 
-## Status: Not Started
+## Status: Completed
 
 ## Dependencies: EPIC 4
 
@@ -19,7 +19,7 @@ This epic does NOT include admin features — those are in EPIC 6.
 
 ### Task 5.1 — Create dashboard layout and page structure
 
-**Status:** [ ] Not Started
+**Status:** [x] Completed
 
 **Description:**
 Create the dashboard shell and main page. The page structure includes a title,
@@ -54,7 +54,7 @@ Loading states are included from the start.
 
 ### Task 5.2 — Build genre filter component
 
-**Status:** [ ] Not Started
+**Status:** [x] Completed
 
 **Description:**
 Create a horizontal scrollable filter bar with genre toggle buttons. Uses the GENRES
@@ -88,7 +88,7 @@ constant as single source of truth. The "All" option clears the filter.
 
 ### Task 5.3 — Build recommendation form with validation
 
-**Status:** [ ] Not Started
+**Status:** [x] Completed
 
 **Description:**
 Create a validated form inside a modal dialog for adding new recommendations.
@@ -135,7 +135,7 @@ Convex mutation handles server-side validation (security layer).
 
 ### Task 5.4 — Build recommendation list with filtering and actions
 
-**Status:** [ ] Not Started
+**Status:** [x] Completed
 
 **Description:**
 Create the recommendation list that displays cards with user-specific action buttons.
