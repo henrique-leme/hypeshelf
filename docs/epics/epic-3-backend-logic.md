@@ -9,7 +9,7 @@ Implement the complete data access layer. Every query that requires auth checks 
 Every mutation validates inputs AND checks authorization. This is the security boundary
 of the application (ADR-005).
 
-## Status: Not Started
+## Status: Completed
 
 ## Dependencies: EPIC 2
 
@@ -19,7 +19,7 @@ of the application (ADR-005).
 
 ### Task 3.1 — Implement recommendation queries
 
-**Status:** [ ] Not Started
+**Status:** [x] Completed
 
 **Description:**
 Create all read operations for recommendations. The public query requires no authentication
@@ -64,7 +64,7 @@ All queries join user data to avoid N+1 patterns.
 
 ### Task 3.2 — Implement recommendation mutations with authorization
 
-**Status:** [ ] Not Started
+**Status:** [x] Completed
 
 **Description:**
 Create all write operations with full authorization enforcement. Every mutation follows
