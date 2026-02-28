@@ -100,6 +100,15 @@ export const updateFromWebhook = internalMutation({
 export const deleteFromWebhook = internalMutation({
   args: { id: v.id("users") },
   handler: async (context, { id }) => {
+    const recommendations = await context.db
+      .query("recommendations")
+      .withIndex("by_user_id", (q) => q.eq("userId", id))
+      .collect();
+
+    await Promise.all(
+      recommendations.map((rec) => context.db.delete(rec._id))
+    );
+
     await context.db.delete(id);
   },
 });
