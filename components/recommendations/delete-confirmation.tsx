@@ -42,7 +42,7 @@ export function DeleteConfirmation({
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="size-8">
+        <Button variant="ghost" size="icon" className="size-8" aria-label="Delete recommendation">
           <Trash2 className="size-4 text-destructive" />
         </Button>
       </AlertDialogTrigger>

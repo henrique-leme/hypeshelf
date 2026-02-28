@@ -55,7 +55,7 @@ export function RecommendationCard({
       </CardContent>
 
       <CardFooter className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <div className="flex min-w-0 items-center gap-2">
           <Avatar size="sm">
             {authorImageUrl && (
               <AvatarImage src={authorImageUrl} alt={authorName} />
@@ -64,7 +64,9 @@ export function RecommendationCard({
               {authorName.charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
-          <span className="text-sm text-muted-foreground">{authorName}</span>
+          <span className="truncate text-sm text-muted-foreground">
+            {authorName}
+          </span>
         </div>
         <a
           href={link}

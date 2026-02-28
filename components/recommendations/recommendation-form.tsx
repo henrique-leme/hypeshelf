@@ -66,7 +66,7 @@ export function RecommendationForm() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button className="w-full sm:w-auto">
           <Plus className="size-4" />
           Add Recommendation
         </Button>

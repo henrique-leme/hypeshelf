@@ -35,7 +35,7 @@ export function StaffPickToggle({
       size="icon"
       className="size-8"
       onClick={handleToggle}
-      title={isStaffPick ? "Remove Staff Pick" : "Mark as Staff Pick"}
+      aria-label={isStaffPick ? "Remove Staff Pick" : "Mark as Staff Pick"}
     >
       <Star
         className={`size-4 ${isStaffPick ? "fill-amber-500 text-amber-500" : "text-muted-foreground"}`}

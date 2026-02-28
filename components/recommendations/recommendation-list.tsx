@@ -4,6 +4,7 @@ import { Id } from "../../convex/_generated/dataModel";
 import { RecommendationCard } from "./recommendation-card";
 import { DeleteConfirmation } from "./delete-confirmation";
 import { StaffPickToggle } from "./staff-pick-toggle";
+import { RecommendationGridSkeleton } from "./recommendation-skeleton";
 
 interface RecommendationWithAuthor {
   _id: Id<"recommendations">;
@@ -29,13 +30,7 @@ export function RecommendationList({
   currentUserRole,
 }: RecommendationListProps) {
   if (recommendations === undefined) {
-    return (
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="h-64 animate-pulse rounded-xl bg-muted" />
-        ))}
-      </div>
-    );
+    return <RecommendationGridSkeleton />;
   }
 
   if (recommendations.length === 0) {

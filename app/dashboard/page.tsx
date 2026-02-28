@@ -28,11 +28,13 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-3xl font-bold tracking-tight">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
           All Recommendations
         </h1>
-        <RecommendationForm />
+        <div className="w-full sm:w-auto">
+          <RecommendationForm />
+        </div>
       </div>
 
       <GenreFilter
