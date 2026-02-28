@@ -9,7 +9,7 @@ Establish the complete authentication and authorization pipeline. After this epi
 users can sign in, their data syncs to Convex, routes are protected, and every
 Convex mutation has reusable auth guards.
 
-## Status: Not Started
+## Status: Completed
 
 ## Dependencies: EPIC 1
 
@@ -19,7 +19,7 @@ Convex mutation has reusable auth guards.
 
 ### Task 2.1 — Install and configure Clerk authentication
 
-**Status:** [ ] Not Started
+**Status:** [x] Completed
 
 **Description:**
 Integrate Clerk as the authentication provider. Create the proxy.ts file (Next.js 16
@@ -60,7 +60,7 @@ Set up sign-in and sign-up pages using Clerk's pre-built components.
 
 ### Task 2.2 — Install and configure Convex backend
 
-**Status:** [ ] Not Started
+**Status:** [x] Completed
 
 **Description:**
 Set up Convex as the backend/database layer. Create the full database schema with
@@ -110,7 +110,7 @@ authorization helpers that will be used in every protected mutation.
 
 ### Task 2.3 — Create user management and Clerk webhook sync
 
-**Status:** [ ] Not Started
+**Status:** [x] Completed
 
 **Description:**
 Implement user storage in Convex with two sync mechanisms: client-initiated (on login)
@@ -155,7 +155,7 @@ verification to prevent forgery (ADR-003).
 
 ### Task 2.4 — Wire auth providers into app layout
 
-**Status:** [ ] Not Started
+**Status:** [x] Completed
 
 **Description:**
 Create the provider wrapper that combines ClerkProvider and ConvexProviderWithClerk,

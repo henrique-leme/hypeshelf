@@ -9,7 +9,7 @@ Establish a solid, secure project foundation. Every configuration decision prior
 security (CSP, HSTS, etc.) from day one. Shared constants and utilities are created
 here to be reused across all future epics (DRY principle).
 
-## Status: Not Started
+## Status: Completed
 
 ## Dependencies: EPIC 0
 
@@ -19,7 +19,7 @@ here to be reused across all future epics (DRY principle).
 
 ### Task 1.1 — Initialize Next.js 16 project with TypeScript and Tailwind
 
-**Status:** [ ] Not Started
+**Status:** [x] Completed
 
 **Description:**
 Create the Next.js application using `create-next-app` with the App Router, TypeScript,
@@ -43,7 +43,7 @@ and Tailwind CSS. Clean all boilerplate content to start with a blank canvas.
 
 ### Task 1.2 — Configure security headers and environment template
 
-**Status:** [ ] Not Started
+**Status:** [x] Completed
 
 **Description:**
 Add comprehensive HTTP security headers to `next.config.ts` following OWASP recommendations.
@@ -86,7 +86,7 @@ CLERK_WEBHOOK_SECRET=whsec_...
 
 ### Task 1.3 — Setup shadcn/ui component library
 
-**Status:** [ ] Not Started
+**Status:** [x] Completed
 
 **Description:**
 Initialize shadcn/ui and install all UI primitives needed across the application.
@@ -112,7 +112,7 @@ This provides accessible, composable components that follow WAI-ARIA standards.
 
 ### Task 1.4 — Create shared constants, types, and utility functions
 
-**Status:** [ ] Not Started
+**Status:** [x] Completed
 
 **Description:**
 Create the shared foundation that all future epics depend on. These constants and
